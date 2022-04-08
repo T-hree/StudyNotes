@@ -12,6 +12,7 @@ mongodb!
 
    mongodb_base
    install
+   dump_restore
    聚合查询
 
 
