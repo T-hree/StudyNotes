@@ -18,11 +18,9 @@ MongoDB文档类似于JSON对象， 即一
 
 .. image:: ../_static/mongodb/img/img.png
     :align: center
-    :width: 200px
 
 .. image:: ../_static/mongodb/img/img_1.png
     :align: center
-    :width: 200px
 
 
 数据结构
@@ -30,4 +28,3 @@ MongoDB文档类似于JSON对象， 即一
 
 .. image:: ../_static/mongodb/img/img_2.png
     :align: center
-    :width: 200px

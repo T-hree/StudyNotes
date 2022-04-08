@@ -11,10 +11,95 @@
 
 
 
+管道(Pipeline) 和 步骤(Stage)
+==============================
 
+.. image:: ../_static/mongodb/img/img_6.png
+    :align: center
+
+聚合运算基本格式
+================
+
+.. image:: ../_static/mongodb/img/img_7.png
+    :align: center
+
+常见步骤
+============
+
+.. image:: ../_static/mongodb/img/img_8.png
+    :align: center
+
+常见步骤中的运算符
+-------------------
+
+.. image:: ../_static/mongodb/img/img_9.png
+    :align: center
+
+比较少见的步骤
+--------------
+
+.. image:: ../_static/mongodb/img/img_10.png
+    :align: center
+
+聚合运算的使用场景
+====================
+
+.. image:: ../_static/mongodb/img/img_11.png
+    :align: center
+
+
+SQL 常用步骤与 MQL 对比
+==========================
+
+.. image:: ../_static/mongodb/img/img_12.png
+    :align: center
+
+.. image:: ../_static/mongodb/img/img_13 .png
+    :align: center
+
+
+MQL 特有步骤 $unwind
+======================
+展开数组:
+::
+
+    插入数据：
+    db.user.insertOne({
+        name:"123",
+        score:[
+            {subject:"数学", score:123},
+            {subject:"语文", score:114},
+            {subject:"英语", score:44}
+        ]})
+    查询数据：
+    db.user.aggregate([
+        {$match:{name:"123"}},
+        {$unwind:'$score'}
+    ])
+    返回数据：
+    { "_id" : ObjectId("624feecb31490c4217601da2"), "name" : "123", "score" : { "subject" : "数学", "score" : 123 } }
+    { "_id" : ObjectId("624feecb31490c4217601da2"), "name" : "123", "score" : { "subject" : "语文", "score" : 114 } }
+    { "_id" : ObjectId("624feecb31490c4217601da2"), "name" : "123", "score" : { "subject" : "英语", "score" : 44 } }
+
+MQL 特有步骤 $bucket
+======================
+
+.. image:: ../_static/mongodb/img/img_14 .png
+    :align: center
+
+MQL 特有步骤 $facet
+======================
+
+.. image:: ../_static/mongodb/img/img_15 .png
+    :align: center
+
+
+
+例子
+=============
 
 总销量
-========
+----------
 计算到目前为止的所有订单的总销售额
 
 实现如下::
@@ -28,7 +113,7 @@
     })
 
 订单金额汇总
-=============
+--------------
 
 查询2019年第一季度(1月1日到3月31日) 已完成订单（completed）的订单总金额 和订单总数
 实现如下::
@@ -59,7 +144,7 @@
 
 
 PS
-====
+-----
 
 如果觉得凭空想象太困难的话
 我们可以使用mongodb官方工具Compass中的Aggregations功能

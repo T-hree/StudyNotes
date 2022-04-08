@@ -494,6 +494,6 @@ code-block方式：
 源码如下：
 ::
 
-    .. image:: ._static/image/test.jpg
+    .. image:: ../._static/image/test.jpg
     :align: center
     :width: 200px

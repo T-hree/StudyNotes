@@ -11,6 +11,7 @@ mongodb!
    :caption: Contents:
 
    mongodb_base
+   install
    聚合查询
 
 
