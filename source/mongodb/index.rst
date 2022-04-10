@@ -14,6 +14,11 @@ mongodb!
    install
    dump_restore
    聚合查询
+   复制集
+   mongo全家桶
+   数据模型
+   Json文档模型的设计特点
+   MongoDB文档模型设计
 
 
 

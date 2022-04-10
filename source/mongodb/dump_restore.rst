@@ -32,6 +32,7 @@ mongodump命令可以通过参数指定导出的数据量级转存的服务器�
 ------
 mongodump命令脚本语法如下：
 ::
+
     >mongodump -h dbhost -d dbname -o dbdirectory
 
 
@@ -48,6 +49,8 @@ mongodump命令脚本语法如下：
 ::
 
     >mongodump
+
+
 执行以上命令后，客户端会连接到ip为 127.0.0.1 端口号为 27017 的MongoDB服务上，并备份所有数据到 bin/dump/ 目录中。命令输出结果如下：
 
 

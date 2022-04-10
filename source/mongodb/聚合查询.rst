@@ -54,7 +54,7 @@ SQL 常用步骤与 MQL 对比
 .. image:: ../_static/mongodb/img/img_12.png
     :align: center
 
-.. image:: ../_static/mongodb/img/img_13 .png
+.. image:: ../_static/mongodb/img/img_13.png
     :align: center
 
 
@@ -84,19 +84,20 @@ MQL 特有步骤 $unwind
 MQL 特有步骤 $bucket
 ======================
 
-.. image:: ../_static/mongodb/img/img_14 .png
+.. image:: ../_static/mongodb/img/img_14.png
     :align: center
 
 MQL 特有步骤 $facet
 ======================
 
-.. image:: ../_static/mongodb/img/img_15 .png
+.. image:: ../_static/mongodb/img/img_15.png
     :align: center
 
 
 
 例子
 =============
+mongodb数据下载地址:`点击此处下载 <https://raw.githubusercontent.com/geektime-geekbang/geektime-mongodb-course/master/aggregation/dump.tar.gz>`_
 
 总销量
 ----------
@@ -107,10 +108,13 @@ MQL 特有步骤 $facet
     db.orders.aggregate(
     {
         $group:{
-            _id:null,  // 以什么为分组
-            total:{$sum:'$total'}  // 新字段 ： 聚合运算符
+            _id:null,  // 以什么为分组  为null时  不分组
+            total:{$sum:'$total'}  // 指定的新字段 ： 新字段是怎么来的(聚合运算符)
             }
     })
+
+    结果：
+    { "_id" : null, "total" : NumberDecimal("44019609") }
 
 订单金额汇总
 --------------
@@ -140,7 +144,8 @@ MQL 特有步骤 $facet
             count:1, // 展示 该字段
             _id:0  // 该字段不展示
         }}])
-
+    结果：
+       { "count" : 5818, "sum" : NumberDecimal("2612553.00") }
 
 
 PS
