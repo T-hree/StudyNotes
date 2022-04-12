@@ -1,0 +1,111 @@
+===================
+事务
+===================
+
+
+writeConcern
+=================
+
+什么是writeConcern
+----------------------
+
+writeConcern 决定一个写操作落到多少个节点上才算成功。
+writeConcern的取值包括：
+- 0: 发起写操作， 不关心是否成功；
+- 1: 集群最大数据节点数： 写操作需要被复制到指定节点数才算成功
+- majority: 写操作需要被复制到大多数节点上才算成功
+发起写操作的程序将阻塞到写操作到达指定的节点数为止
+
+默认行为
+-----------
+
+3 节点复制集 不作任何特别设定（默认值）：
+
+ .. image:: ../_static/mongodb/img/img_66.png
+    :align: center
+
+w: "majority"
+--------------------
+
+大多数节点确认模式
+
+ .. image:: ../_static/mongodb/img/img_67.png
+    :align: center
+
+w: "all"
+---------------------
+
+全部节点确认模式
+
+ .. image:: ../_static/mongodb/img/img_68.png
+    :align: center
+
+j: true
+----------------
+
+writeConcern 可以决定写操作到达多少个节点才算成功， journal则定义如何才算成功。
+取值包括：
+- true: 写操作落到journal文件才算成功；
+- false: 写操作到达内存即算作成功。
+
+writeConcern 的意义
+-------------------------
+
+对于5个节点的复制集来说，写落到多少个几点上才算是安全的？
+- 1
+- 2
+- 3  √
+- 4  √
+- 5  √
+- majority  √
+
+writeConcern 实验
+----------------------
+
+*在复制集测试writeConcern参数*
+::
+
+    db.test.insert({count:1}, {writeConcern:{w:"majority"}})
+    db.test.insert({count:1}, {writeConcern:{w:3}})
+    db.test.insert({count:1}, {writeConcern:{w:4}})
+
+*配置延迟节点， 模拟网络延迟（复制延迟）*
+::
+
+    conf=rs.conf()
+    conf.members[2].secondaryDelaySecs = 10 （延迟节点  单位秒）
+    conf.members[2].priority = 0
+    rs.reconfig(conf)
+
+*观察复制集延迟下的写入， 以及timeout参数*
+::
+
+    db.test.insert({count:1},{writeConcern:{w:3}})
+    # 等待10秒后 返回结果 写入完成
+    db.test.insert({count:1},{writeConcern:{w:3, wtimeout:3000}})
+    # 等待3秒后， 返回结果：
+    WriteResult({
+            "nInserted" : 1,
+            "writeConcernError" : {
+                    "code" : 64,
+                    "codeName" : "WriteConcernFailed",
+                    "errmsg" : "waiting for replication timed out",
+                    "errInfo" : {
+                            "wtimeout" : true,
+                            "writeConcern" : {
+                                    "w" : 3,
+                                    "wtimeout" : 3000,
+                                    "provenance" : "clientSupplied"
+                            }
+                    }
+            }
+    })
+    # "nInserted" : 1,表示 写入成功了， 后面的error 表示  某些节点还没有完成  需要更新义务场景进行处理
+
+注意事项
+-----------------
+
+- 虽然多于半数的writeConcern 都是安全的， 但通常只会设置majority， 因为这是等待些人延迟时间最短的选择；
+- 不要设置 writeConcern 等于总节点数， 因为一旦有一个节点故障， 所有写操作都将失败；
+- writeConcern 虽然会增加 写操作延迟时间， 但并不会显著增加集群压力， 应此无论是否等待，写操作最终都会复制到所有节点上。 设置writConcern只是让写操作等待复制后在返回而已；
+- 应对重要数据 应用 `` {w:"majority"}`` 普通数据可以应用 ``{w:1}`` 以确保最佳性能

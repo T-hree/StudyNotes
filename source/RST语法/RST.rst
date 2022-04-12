@@ -497,3 +497,41 @@ code-block方式：
     .. image:: ../._static/image/test.jpg
     :align: center
     :width: 200px
+
+
+======
+表格
+======
+
+简单的表格如 :numref: `simple_table` 所示
+
+.. table:: 简单表格
+    :name: simple_table
+
+    =====  =====  =======
+    输入           输出
+    ------------  -------
+    A      B      A or B
+    =====  =====  =======
+    Flase  False  False
+    True   False  True
+    Flase  True   True
+    True   True   True
+    =====  =====  =======
+
+源码如下：
+::
+
+    .. table:: 简单表格
+        :name: simple_table
+
+        =====  =====  =======
+        输入           输出
+        ------------  -------
+        A      B      A or B
+        =====  =====  =======
+        Flase  False  False
+        True   False  True
+        Flase  True   True
+        True   True   True
+        =====  =====  =======
