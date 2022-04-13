@@ -240,7 +240,9 @@ readPreference实验：从节点读
 
 readConcern: local和available
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 在复制集中local和available是没有区别的。 两者的区别主要体现在分片集上。 考虑以下场景：
+
 - 一个 chunk x 正在从 shard1 向 shard2 迁移；
 - 整个迁移过程中chunk x 中的部分数据会在shard1 和 shard2 中同时存在， 但源分片shard1任然是chunk x 的负责方：
     - 所有对chunk x 的读写操作任然进入 shard1
@@ -369,4 +371,6 @@ readConcern: snapshot
 - 不出现脏读
 - 不出现不可重复读
 - 不出现幻读
+
  因为所有的读都将使用同一个快照， 直到事务提交为止 该快照才被释放
+
