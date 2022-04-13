@@ -135,7 +135,7 @@ readPreference决定使用哪一个节点来满足正在发起的读请求。可
 - nearest: 选择最近的节点
 
 readPreference场景举例
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - 用户下订单马上将用户订单详情页 ---- primary/primaryPreferred. 因为此时从节点可能还没有复制到新订单
 - 用户查询自己下过的订单 ---- secondary/secondaryPreferred. 查询历史订单对时效性通常没有太高的要求
@@ -144,7 +144,7 @@ readPreference场景举例
 
 
 readPreference 与 Tag
--------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 readPreference只能控制使用一类节点。Tag则可以将节点选择控制到一个或多个节点。考虑一下场景：
 - 一个  5个节点的复制集
@@ -157,7 +157,7 @@ readPreference只能控制使用一类节点。Tag则可以将节点选择控制
 
 
 readPreference 配置
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 通过MongoDB的连接串参数：
 ::
@@ -176,20 +176,197 @@ Mongo Shell:
     db.collection.find({}).readPref("secondary")
 
 readPreference实验：从节点读
------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - 主节点写入{x:1}, 观察该条数据在各个节点均可见
+::
+
+    rs0:PRIMARY> db.test.insert({count:1})
+    WriteResult({ "nInserted" : 1 })
+
 - 在两个从节点分别执行db.fsyncLock() 来锁定写入(同步)
+::
+
+    rs0:SECONDARY> db.fsyncLock()
+    {
+            "info" : "now locked against writes, use db.fsyncUnlock() to unlock",
+            "lockCount" : NumberLong(1),
+            "seeAlso" : "http://dochub.mongodb.org/core/fsynccommand",
+            "ok" : 1,
+            "$clusterTime" : {
+                    "clusterTime" : Timestamp(1649854602, 1),
+                    "signature" : {
+                            "hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+                            "keyId" : NumberLong(0)
+                    }
+            },
+            "operationTime" : Timestamp(1649854592, 1)
+    }
+
 - 主节点写入{x:2}
-    - db.test.find({a:123})
+    - db.test.find({x:2})
+    rs0:PRIMARY> db.test.find()
+    { "_id" : ObjectId("6256cd35262cf4ed07e4bdc6"), "x" : 1 }
+
     - db.test.find({a:123}).readPref("secondary")  # 指定在从节点读
+    rs0:PRIMARY> db.test.find().readPref('secondary')
+    { "_id" : ObjectId("6256cd35262cf4ed07e4bdc6"), "x" : 1 }
+    { "_id" : ObjectId("6256cd9d262cf4ed07e4bdc7"), "x" : 2 }
+
 - 解除从节点锁定db.fsyncUnlock()
     - db.test.find({a:123}).readPref("secondary")
+    rs0:PRIMARY> db.test.find().readPref('secondary')
+    { "_id" : ObjectId("6256cd35262cf4ed07e4bdc6"), "x" : 1 }
+    { "_id" : ObjectId("6256cd9d262cf4ed07e4bdc7"), "x" : 2 }
 
 注意事项
--------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - 指定readPreference时也应注意高可用的问题。 例如将readPreference指定primary， 则发生故障转移不存在primary期间将没有节点可读。如果业务允许， 则应选择primaryPreferred
 - 使用Tag是也会遇到同样的问题， 如果只有一个节点拥有一个特定Tag， 则在这个节点失效时 将无节点可读。 这在有时候是期望的结果， 有时候不是。例如：
     - 如果报表使用的节点失效， 即使不生成报表， 通常也不希望将报表负载转移到其他节点上，此时只有一个节点有报表Tag是合理的选择
     - 如果线上节点失效， 通常希望有代替节点， 所以因该保持多个节点有同样的Tag
 - Tag 有事需要与优先级、 选举权综合考虑， 例如做报表的节点通常不会希望他成为主节点， 则优先级因为0
+
+
+什么是readConcern？
+-----------------------------
+
+在readPreference选择了指定的节点后， readConcern决定这个节点上的数据那些是可读的， 类似于关系数据库的隔离级别。可选值包括：
+- available: 读取所有可用的数据；
+- local: 读取所有可用且属于当前分片的数据
+- majority: 读取大多数节点上提交完成的数据；
+- linearizable: 可线性化读取文档；
+- snapshot: 读取最近快照中的数据；
+
+readConcern: local和available
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+在复制集中local和available是没有区别的。 两者的区别主要体现在分片集上。 考虑以下场景：
+- 一个 chunk x 正在从 shard1 向 shard2 迁移；
+- 整个迁移过程中chunk x 中的部分数据会在shard1 和 shard2 中同时存在， 但源分片shard1任然是chunk x 的负责方：
+    - 所有对chunk x 的读写操作任然进入 shard1
+    - config 中记录的信息 chunk x 任然属于 shard1
+- 此时如果读 shard2， 则会体现出 local 和available 的区别
+    - local  只取因该由shard2 负责的数据 （不包括x）
+    - available  shard 2 上有什么就读什么（包括x）
+
+ .. image:: ../_static/mongodb/img/img_69.png
+    :align: center
+
+注意事项：
+"""""""""""""""""""
+
+- 虽然看上去总是应该选择local， 但毕竟对结果集进行过滤会造成额外消耗。 在一些无关紧要的场景（例如统计）下， 也可以考虑available
+- Mongodb <= 3.6 不支持对从节点使用{readConcern:"local"}
+- 从主节点读取数据时默认readConcern是local， 从从节点读取数据是 默认readConcern是 available（向前兼容原因）
+
+readConcern: majority
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+只读取大多数节点上都提交了的数。 考虑如下场景：
+- 集合中原有文档{x:0}
+- 将x值更新为1
+
+ .. image:: ../_static/mongodb/img/img_70.png
+    :align: center
+
+如果在各节点上应用{readConcern: majority}来读取数据：
+
+ .. image:: ../_static/mongodb/img/img_71.png
+    :align: center
+
+readConcern: majority 的实现方式
+""""""""""""""""""""""""""""""""""""""""""
+
+考虑t3时刻的Secondary1， 此时：
+- 对于要去 majority的读操作， 他将返回x = 0
+- 对应不要去majority的读操作， 他将返回x = 1
+
+ .. image:: ../_static/mongodb/img/img_72.png
+    :align: center
+
+| 如何实现？
+| 节点上维护多个x版本， MVCC机制 MongoDB通过维护多个快照来链接不同的版本：
+- 每个被大多数节点确认过的版本都将是一个快照
+- 快照持续到没有人使用为止才被删除
+
+实验： readConcern: 'majority' vs 'local'
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- 安装3节点复制集
+- 注意配置文件内server参数 enableMajorityReadConcern
+- 将复制集中的两个从节点使用db.fsyncLock()锁住写入（模拟同步延迟）
+
+readConcern 验证
+"""""""""""""""""""""""
+
+- db.test.insert({a:1})
+- db.test.find().readConcern('local')
+- db.test.find()/readConcern('majority')
+- 在某一个从节点上执行db.fsyncUnlock()
+- 结论：
+    - 使用local参数， 则可以直接查询到写入数据
+    - 使用majority， 只能查询到已经被多数节点确认过的数据
+    - update 与 remove 与上同理。
+
+readConcern: majority 与 脏读
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+MongoDB中的回滚：
+- 写操作打到大多数节点之前都是不安全的， 一旦主节点崩溃， 而从节点还没复制到该次操作，刚才的写操作就丢失了
+- 把一次写操作视为一个事务， 从事务的角度， 可以任务事务被回滚了
+| 所以从分布式系统的角度来看， 事务的提交被提升到了分布式集群的多个节点级别的“提交” ， 而不再是单个节点上的“提交”
+| 在可能发生回滚的前提下考虑脏读问题：
+- 如果在一次写操作打到大多数节点前读取了这个写操作， 然后因为系统故障该操作回滚了， 则发生了脏读问题
+使用{readConcern:"majority"}可以有效避免脏读
+
+readConcern: 如何实现安全的读写分离
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+考虑如下场景：
+::
+
+    向主节点写入一条数据
+    立刻从主节点读取这条数据
+
+如何保证自己能够读到刚刚写入的数据？
+
+下述方式可能读不到刚写入的订单：
+::
+
+    db.orders.insert({oid:101, sku:"kite", q:1})
+    db.orders.find({oid:101}).readPref('secondary')
+
+使用writeConcern + readConcern majority 来解决:
+::
+
+     db.orders.insert({oid:101, sku:"kite", q:1}, {writeConcern:{w:"majority"}})
+     db.orders.find({oid:101}).readPref('secondary').readConcern("majority")
+
+小测试
+"""""""""""""""""""""""""
+
+| readConcern 主要关注读的隔离性， ACID中的Isolation， 但是是分布式数据库里面特有的概念
+| readConcern: majority对应于事务中隔离级别中的哪一级？
+
+- Read Uncommitted
+- Read Committed  √
+- Repeatable Read
+- Seriazable
+
+readConcern: linearizable
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+只读取大多数节点确认过的数据。 和 majority最大差别是保证绝对的操作线性顺序 - 在写操作自然时间后面的发生的读， 一定可以读到之前的写：
+- 只对读取单个文档时有效
+- 可能导致非常慢的读， 因此总是建议配合使用maxTimeMS
+
+ .. image:: ../_static/mongodb/img/img_73.png
+    :align: center
+
+readConcern: snapshot
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+{readConcern:'snapshot'} 只在多文档事务中生效， 讲一个事务的readConcern设置为snapshot ， 保证在事务中的读：
+- 不出现脏读
+- 不出现不可重复读
+- 不出现幻读
+ 因为所有的读都将使用同一个快照， 直到事务提交为止 该快照才被释放
