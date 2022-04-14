@@ -1,0 +1,48 @@
+==========================
+Linux中修改环境变量
+==========================
+
+
+对所有用户生效（永久的）
+=========================
+
+用vim在文件/etc/profile文件中增加变量，该变量将会对Linux下所有用户有效，并且是“永久的”。
+
+要让刚才的修改马上生效，需要执行以下代码
+
+例如：
+::
+    vim /etc/profile
+
+    # 在文件末尾加上
+    export MONGODB=/usr/local/lib/mongodb
+    export PATH=$MONGODB/bin:$PATH
+    # wq 保存
+
+    source /etc/profile  # 执行
+
+
+对单一用户生效（永久的）
+===========================
+
+用vim在用户目录下的.bash_profile文件中增加变量，改变量仅会对当前用户有效，并且是“永久的”。
+
+要让刚才的修改马上生效，需要在用户目录下执行以下代码
+
+# source .bash_profile
+
+
+只对当前shell（BASH）有效（临时的）
+===========================================
+
+在shell的命令行下直接使用[export  变量名=变量值]定义变量，
+
+该变量只在当前的shell（BASH）或其子shell（BASH）下是有效的，shell关闭了，变量也就失效了，
+
+再打开新shell时就没有这个变量，需要使用的话还需要重新定义。
+
+例如：export PATH=/usr/local/webserver/php/bin:$PATH
+
+
+
+

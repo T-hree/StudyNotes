@@ -11,6 +11,7 @@ writeConcern
 
 writeConcern 决定一个写操作落到多少个节点上才算成功。
 writeConcern的取值包括：
+
 - 0: 发起写操作， 不关心是否成功；
 - 1: 集群最大数据节点数： 写操作需要被复制到指定节点数才算成功
 - majority: 写操作需要被复制到大多数节点上才算成功
@@ -45,6 +46,7 @@ j: true
 
 writeConcern 可以决定写操作到达多少个节点才算成功， journal则定义如何才算成功。
 取值包括：
+
 - true: 写操作落到journal文件才算成功；
 - false: 写操作到达内存即算作成功。
 
@@ -52,6 +54,7 @@ writeConcern 的意义
 -------------------------
 
 对于5个节点的复制集来说，写落到多少个几点上才算是安全的？
+
 - 1
 - 2
 - 3  √
@@ -118,6 +121,7 @@ writeConcern 实验
 -------------
 
 在读取数据的过程中我们需要关注以下两个问题：
+
 - 从哪里读？ 关注数据节点 位置
 - 什么样的数据可以读？ 关注数据的隔离性
 | 第一个问题是由readPreference来解决
@@ -128,6 +132,7 @@ writeConcern 实验
 ---------------------------
 
 readPreference决定使用哪一个节点来满足正在发起的读请求。可选值包括：
+
 - primary: 只选择主节点
 - primaryPreferred： 优先选择主节点， 如果不可用则选择从节点
 - secondary: 只选择从节点；
@@ -147,10 +152,12 @@ readPreference 与 Tag
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 readPreference只能控制使用一类节点。Tag则可以将节点选择控制到一个或多个节点。考虑一下场景：
+
 - 一个  5个节点的复制集
 - 3个节点硬件较好， 专用于服务线上客户
 - 2个节点硬件较差， 专用于生成报表
 可以使用Tag来打到这样的控制目的：
+
 - 为3个较好的节点打上 {purpose:"online"}
 - 为2个较差的节点打上 {purpose: "analyse"}
 - 在线应用读取时指定 online, 报表读取时指定 analyse
@@ -204,19 +211,25 @@ readPreference实验：从节点读
 
 - 主节点写入{x:2}
     - db.test.find({x:2})
-    rs0:PRIMARY> db.test.find()
-    { "_id" : ObjectId("6256cd35262cf4ed07e4bdc6"), "x" : 1 }
+    ::
+
+        rs0:PRIMARY> db.test.find()
+        { "_id" : ObjectId("6256cd35262cf4ed07e4bdc6"), "x" : 1 }
 
     - db.test.find({a:123}).readPref("secondary")  # 指定在从节点读
-    rs0:PRIMARY> db.test.find().readPref('secondary')
-    { "_id" : ObjectId("6256cd35262cf4ed07e4bdc6"), "x" : 1 }
-    { "_id" : ObjectId("6256cd9d262cf4ed07e4bdc7"), "x" : 2 }
+    ::
+
+        rs0:PRIMARY> db.test.find().readPref('secondary')
+        { "_id" : ObjectId("6256cd35262cf4ed07e4bdc6"), "x" : 1 }
+        { "_id" : ObjectId("6256cd9d262cf4ed07e4bdc7"), "x" : 2 }
 
 - 解除从节点锁定db.fsyncUnlock()
     - db.test.find({a:123}).readPref("secondary")
-    rs0:PRIMARY> db.test.find().readPref('secondary')
-    { "_id" : ObjectId("6256cd35262cf4ed07e4bdc6"), "x" : 1 }
-    { "_id" : ObjectId("6256cd9d262cf4ed07e4bdc7"), "x" : 2 }
+    ::
+
+        rs0:PRIMARY> db.test.find().readPref('secondary')
+        { "_id" : ObjectId("6256cd35262cf4ed07e4bdc6"), "x" : 1 }
+        { "_id" : ObjectId("6256cd9d262cf4ed07e4bdc7"), "x" : 2 }
 
 注意事项
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -232,6 +245,7 @@ readPreference实验：从节点读
 -----------------------------
 
 在readPreference选择了指定的节点后， readConcern决定这个节点上的数据那些是可读的， 类似于关系数据库的隔离级别。可选值包括：
+
 - available: 读取所有可用的数据；
 - local: 读取所有可用且属于当前分片的数据
 - majority: 读取大多数节点上提交完成的数据；
@@ -265,6 +279,7 @@ readConcern: majority
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 只读取大多数节点上都提交了的数。 考虑如下场景：
+
 - 集合中原有文档{x:0}
 - 将x值更新为1
 
@@ -280,6 +295,7 @@ readConcern: majority 的实现方式
 """"""""""""""""""""""""""""""""""""""""""
 
 考虑t3时刻的Secondary1， 此时：
+
 - 对于要去 majority的读操作， 他将返回x = 0
 - 对应不要去majority的读操作， 他将返回x = 1
 
@@ -288,6 +304,7 @@ readConcern: majority 的实现方式
 
 | 如何实现？
 | 节点上维护多个x版本， MVCC机制 MongoDB通过维护多个快照来链接不同的版本：
+
 - 每个被大多数节点确认过的版本都将是一个快照
 - 快照持续到没有人使用为止才被删除
 
@@ -314,10 +331,13 @@ readConcern: majority 与 脏读
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 MongoDB中的回滚：
+
 - 写操作打到大多数节点之前都是不安全的， 一旦主节点崩溃， 而从节点还没复制到该次操作，刚才的写操作就丢失了
 - 把一次写操作视为一个事务， 从事务的角度， 可以任务事务被回滚了
+
 | 所以从分布式系统的角度来看， 事务的提交被提升到了分布式集群的多个节点级别的“提交” ， 而不再是单个节点上的“提交”
 | 在可能发生回滚的前提下考虑脏读问题：
+
 - 如果在一次写操作打到大多数节点前读取了这个写操作， 然后因为系统故障该操作回滚了， 则发生了脏读问题
 使用{readConcern:"majority"}可以有效避免脏读
 
@@ -358,6 +378,7 @@ readConcern: 如何实现安全的读写分离
 readConcern: linearizable
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 只读取大多数节点确认过的数据。 和 majority最大差别是保证绝对的操作线性顺序 - 在写操作自然时间后面的发生的读， 一定可以读到之前的写：
+
 - 只对读取单个文档时有效
 - 可能导致非常慢的读， 因此总是建议配合使用maxTimeMS
 
@@ -368,9 +389,197 @@ readConcern: snapshot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 {readConcern:'snapshot'} 只在多文档事务中生效， 讲一个事务的readConcern设置为snapshot ， 保证在事务中的读：
+
 - 不出现脏读
 - 不出现不可重复读
 - 不出现幻读
 
  因为所有的读都将使用同一个快照， 直到事务提交为止 该快照才被释放
 
+多文档事务
+=================
+
+综述
+----------------
+
+| Mongodb虽然已经在4.2开始全面支持了多文档事务，但并不代表大家已改毫无节制的使用他，相反， 对事务的使用原则因该是：能不用尽量不用
+| 通过合理地设计文档模型， 可以避免绝大部分使用事务的必要性
+| 为什么？ ===>>>  事务 = 锁 ， 节点协调， 额外开销， 性能影响
+
+MongoBD ACID 多文档事务支持
+-------------------------------------
+
+ .. image:: ../_static/mongodb/img/img_74.png
+    :align: center
+
+使用方法
+^^^^^^^^^^^^^^^^^^
+
+MongoDB多文档事务的使用方式与关系数据库非常相似：
+::
+
+    try(ClientSession clientSession = client.startSession()){
+        clientSession.startTransaction();
+        collection.insertOne(clientSession, docOne);
+        collection.insertOne(clientSession, docTwo);
+        clientSession.commitTransaction();
+    }
+
+事务隔离级别
+------------------
+
+- 事务完成前， *事务外的操作* 对改事务所做的修改不可访问
+- 如果事务内使用{readConcern: 'snapshot'}, 则可以打到可重复去 Repeatable Read
+
+
+实验：启用事务后的隔离性
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    rs0:PRIMARY> db.tx.find()
+    { "_id" : ObjectId("62578f3e1c7fac7ad116fe36"), "x" : 1 }
+    { "_id" : ObjectId("62578f601c7fac7ad116fe37"), "x" : 2 }
+    rs0:PRIMARY> var session = db.getMongo().startSession()  # 生成事务对象
+    rs0:PRIMARY> session.startTransaction()  # 开启事务
+    rs0:PRIMARY> var coll = session.getDatabase('test').getCollection('tx')  # 获取文档对象
+    rs0:PRIMARY> coll.update({x:1}, {$set:{y:1}})  # 事务中修改
+    WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+    rs0:PRIMARY> coll.find()  # 事务中查询
+    { "_id" : ObjectId("62578f3e1c7fac7ad116fe36"), "x" : 1, "y" : 1 }
+    { "_id" : ObjectId("62578f601c7fac7ad116fe37"), "x" : 2 }
+    rs0:PRIMARY> db.tx.find()  # 事务外查询
+    { "_id" : ObjectId("62578f3e1c7fac7ad116fe36"), "x" : 1 }
+    { "_id" : ObjectId("62578f601c7fac7ad116fe37"), "x" : 2 }
+    rs0:PRIMARY> session.commitTransaction()  # 提交事务
+    rs0:PRIMARY> db.tx.find()
+    { "_id" : ObjectId("62578f3e1c7fac7ad116fe36"), "x" : 1, "y" : 1 }
+    { "_id" : ObjectId("62578f601c7fac7ad116fe37"), "x" : 2 }
+
+
+实验： 可重复读 Repeatable Read
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    rs0:PRIMARY> var session = db.getMongo().startSession()
+    rs0:PRIMARY> session.startTransaction({radConcern:{level:'snapshot'},writeConcern:{w:'majority'}})
+    rs0:PRIMARY> coll = session.getDatabase('test').getCollection('tx')
+    test.tx
+    rs0:PRIMARY> coll.find()
+    { "_id" : ObjectId("62578f3e1c7fac7ad116fe36"), "x" : 1, "y" : 1 }
+    { "_id" : ObjectId("62578f601c7fac7ad116fe37"), "x" : 2 }
+    rs0:PRIMARY> db.tx.updateOne({x:1}, {$set:{y:2}})
+    { "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+    rs0:PRIMARY> db.tx.find()
+    { "_id" : ObjectId("62578f3e1c7fac7ad116fe36"), "x" : 1, "y" : 2 }
+    { "_id" : ObjectId("62578f601c7fac7ad116fe37"), "x" : 2 }
+    rs0:PRIMARY> coll.find()
+    { "_id" : ObjectId("62578f3e1c7fac7ad116fe36"), "x" : 1, "y" : 1 }
+    { "_id" : ObjectId("62578f601c7fac7ad116fe37"), "x" : 2 }
+    rs0:PRIMARY> session.abortTransaction()
+
+
+事务写机制
+------------------
+
+MongoDB 的事务错误处理机制不同于关系性数据库：
+
+- 当一个事务开始后， 如果事务要修改的文档在事务外部被修改过， 则事务修改这个文档时会触发 Abort 错误， 因为此时的修改冲突了；
+- 这种情况下， 只需要简单的重做事务就可以了
+- 如果一个事务已经开始修改一个文档， 在事务以外尝试修改用一个文档， 则事务以外的修改会等事务完成才能继续进行（write-wait.md实验)
+
+实验： 写冲突
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+继续使用上个实验的tx集合
+
+开两个mongo shell 均执行下述语句：
+::
+
+    var session = db.getMongo().startSession()
+    session.startTransaction({
+        readConcern:{level:'snapshot'},
+        writeConcern:{w:'majority'}
+    })
+    var coll = session.getDatabase('test').getCollection('tx')
+
+窗口一先进行update:
+::
+
+    coll.updateOne({x:1},{$set:{y:1}})
+    { "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+
+窗口二在进行update 会报错:
+::
+
+    rs0:PRIMARY> coll.updateOne({x:1},{$set:{y:1}})
+    uncaught exception: WriteCommandError({
+            "errorLabels" : [
+                    "TransientTransactionError"
+            ],
+            "ok" : 0,
+            "errmsg" : "WriteConflict error: this operation conflicted with another operation. Please retry your operation or multi-document transaction.",
+            "code" : 112,
+            "codeName" : "WriteConflict",
+            "$clusterTime" : {
+                    "clusterTime" : Timestamp(1649919215, 1),
+                    "signature" : {
+                            "hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+                            "keyId" : NumberLong(0)
+                    }
+            },
+            "operationTime" : Timestamp(1649919215, 1)
+    }) :
+    WriteCommandError({
+            "errorLabels" : [
+                    "TransientTransactionError"
+            ],
+            "ok" : 0,
+            "errmsg" : "WriteConflict error: this operation conflicted with another operation. Please retry your operation or multi-document transaction.",
+            "code" : 112,
+            "codeName" : "WriteConflict",
+            "$clusterTime" : {
+                    "clusterTime" : Timestamp(1649919215, 1),
+                    "signature" : {
+                            "hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+                            "keyId" : NumberLong(0)
+                    }
+            },
+            "operationTime" : Timestamp(1649919215, 1)
+    })
+
+窗口一将事务提交：
+::
+
+    session.commitTransaction()
+
+窗口二再次update也会报错， 需要重启事务:
+::
+
+    rs0:PRIMARY> session.abortTransaction()
+    rs0:PRIMARY> session.startTransaction({readConcern:{level:'snapshot'},writeConcern:{w:'majority'}})
+    rs0:PRIMARY> var coll = session.getDatabase('test').getCollection('tx')
+    rs0:PRIMARY> coll.updateOne({x:1},{$set:{y:2}})
+    { "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+    # 此时就不会报错
+    # 提交
+
+
+实验:写冲突（续)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+窗口1： 第一个事务，正常提交： `coll.updateOne({x:1},{$set:{y:1}})`
+窗口2： 另一个事务更新同一条数据，异常： `coll.updateOne({x:1},{$set:{y:2}})`
+窗口3： 事务外更新，会一直等待 直到第一个事务 commit后立即执行： `coll.updateOne({x:1},{$set:{y:3}})`
+
+注意事项
+------------------------
+
+- 可以实现和关系型数据库类似的事务常见
+- 必须使用与MongoDB4.2以上兼容的驱动
+- 事务默认必须在 60 秒（可调） 内完成， 否则将被取消
+- 设计事务的分片不能使用仲裁节点
+- 事务会影响chunk迁移效率。 正在迁移的chunk 也可能造成事务提交失败（重试即可）
+- 多文档事务中的读操作必须使用主节点读；
+- readConcern只应该在事务级别设置， 不能设置在每次读写操作上。
