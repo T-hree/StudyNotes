@@ -60,6 +60,7 @@ SQL 常用步骤与 MQL 对比
 
 MQL 特有步骤 $unwind
 ======================
+
 展开数组:
 ::
 
@@ -84,13 +85,13 @@ MQL 特有步骤 $unwind
 MQL 特有步骤 $bucket
 ======================
 
-.. image:: ../_static/mongodb/img/img_14.png
+.. image:: ../_static/mongodb/img/img_15.png
     :align: center
 
 MQL 特有步骤 $facet
 ======================
 
-.. image:: ../_static/mongodb/img/img_15.png
+.. image:: ../_static/mongodb/img/img_16.png
     :align: center
 
 

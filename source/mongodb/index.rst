@@ -14,6 +14,7 @@ mongodb!
    install
    dump_restore
    聚合查询
+   一些特殊的操作符
    复制集
    mongo全家桶
    数据模型

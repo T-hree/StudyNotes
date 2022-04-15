@@ -1,11 +1,10 @@
 name: CI
 
-on:
-  push:
-    branches: [ main ]
+on: push
 
 jobs:
-  hello:  # job名称
-    runs-on: self-hosted
+  Test:
+    runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - run: ls
