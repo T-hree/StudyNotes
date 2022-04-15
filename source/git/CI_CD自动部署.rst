@@ -80,3 +80,11 @@ sphinx项目简单实例：
           - name: Check out repository code  # 步骤的名称
             uses: actions/checkout@v3   # 使用现有的 工作流步骤 checkout 是简化你clone cd project_dir 等一些列步骤
           - run: make html  # 执行的shell命令
+
+
+注意事项
+=================
+
+当服务器上的  ./run.sh 进程 死亡 或者 其他情况 没有在正常运行时
+
+此时在触发工作流 会无法正确的执行
