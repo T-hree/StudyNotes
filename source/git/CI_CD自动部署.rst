@@ -87,4 +87,53 @@ sphinx项目简单实例：
 
 当服务器上的  ./run.sh 进程 死亡 或者 其他情况 没有在正常运行时
 
-此时在触发工作流 会无法正确的执行
+此时在触发工作流 会无法正确的执行  他会一直等待服务器的 runner 进程来接受任务:
+::
+
+    Requested labels: self-hosted
+    Job defined at: T-hree/StudyNotes/.github/workflows/CICD.yml@refs/heads/main
+    Waiting for a runner to pick up this job...
+    如果 等待超过了30分钟  将不会继续等待  直接退出
+
+
+在服务器 后台运行 run.sh
+==================================
+
+后台运行进程的方式 有很多  这里推荐 github官方的 runner服务： `将自托管的运行应用程序配置为服务 <https://docs.github.com/cn/actions/hosting-your-own-runners/configuring-the-self-hosted-runner-application-as-a-service>`_
+
+::
+
+    安装服务
+    如果自托管的运行器应用程序正在运行，请停止它。
+
+    使用以下命令安装服务：
+
+    sudo ./svc.sh install
+    该命令采用可选的 user 参数，以其他用户身份安装服务。
+
+    ./svc.sh install USERNAME
+    启动服务
+    使用以下命令启动服务：
+
+    sudo ./svc.sh start
+    检查服务状态
+    使用以下命令检查服务状态：
+
+    sudo ./svc.sh status
+    有关查看自托管运行器状态的更多信息，请参阅“自托管运行器监控和故障排除”。
+
+    停止服务
+    使用以下命令停止服务：
+
+    sudo ./svc.sh stop
+    卸载服务
+    停止正在运行的服务。
+
+    使用以下命令卸载服务：
+
+    sudo ./svc.sh uninstall
+
+自定义自托管运行器服务
+---------------------------
+
+如果您不想使用上述默认 systemd 服务配置，您可以创建自定义服务或使用您喜欢的服务机制。 考虑使用 actions-runner/bin/actions.runner.service.template 中的 serviced 模板作为参考。 如果您使用自定义的服务，必须始终使用 runsvc.sh 入口来调用自托管的运行器服务。
