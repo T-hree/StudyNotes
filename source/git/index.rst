@@ -11,6 +11,7 @@ git!
    :caption: Contents:
 
    git撤销、还原、放弃本地文件修改
+   CI_CD自动部署
 
 
 
