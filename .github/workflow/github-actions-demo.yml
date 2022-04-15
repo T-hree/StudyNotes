@@ -1,9 +1,0 @@
-name: CI
-
-on: push
-
-jobs:
-  Test:
-    runs-on: [self-hosted, linux, x64]
-    steps:
-      run: ls
