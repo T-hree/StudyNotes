@@ -155,7 +155,7 @@ PS
 如果觉得凭空想象太困难的话
 我们可以使用mongodb官方工具Compass中的Aggregations功能
 
-.. image:: ../_static/mongodb/img/img_2.png
+.. image:: ../_static/mongodb/img/img_14.png
 
 
 
