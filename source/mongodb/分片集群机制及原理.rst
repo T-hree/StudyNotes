@@ -34,3 +34,72 @@ MongoDB 常见部署架构
 .. image:: ../_static/mongodb/img/img_81.png
     :align: center
 
+完整的分片集群
+========================
+
+.. image:: ../_static/mongodb/img/img_82.png
+    :align: center
+
+分片集群解剖
+================================
+
+路由节点mongos
+------------------
+
+.. image:: ../_static/mongodb/img/img_83.png
+    :align: center
+
+配置节点
+-----------------------
+
+.. image:: ../_static/mongodb/img/img_84.png
+    :align: center
+
+数据节点mongod
+----------------------
+
+.. image:: ../_static/mongodb/img/img_85.png
+    :align: center
+
+MongoDB分片集群特点
+=========================
+
+- 应用全透明，无特殊处理
+- 数据自动均衡
+- 动态扩容， 无需下线
+- 提供三种分片方式
+
+分片集群数据分片方式
+----------------------
+
+- 基于范围
+- 基于Hash
+- 基于 zone / tag
+
+基于范围
+^^^^^^^^^^^^^^^^
+
+.. image:: ../_static/mongodb/img/img_86.png
+    :align: center
+
+
+基于Hash
+^^^^^^^^^^^^^^^^^^^
+
+.. image:: ../_static/mongodb/img/img_87.png
+    :align: center
+
+自定义Zone
+^^^^^^^^^^^^^^^^^^^^
+
+.. image:: ../_static/mongodb/img/img_88.png
+    :align: center
+
+
+小结
+=============
+
+- 分片集群可以有效解决性能瓶颈及系统扩容问题
+- 分片额外消耗较多， 管理复杂， 尽量不要分片
+- 如果实在要用，请仔细设计。
+

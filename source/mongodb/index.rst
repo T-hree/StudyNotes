@@ -25,6 +25,9 @@ mongodb!
    ChangeStream
    MongoDB开发最佳实践
    分片集群机制及原理
+   分片集群设计
+   分片集群搭建及扩容
+
 
 
 
