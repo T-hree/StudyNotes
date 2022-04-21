@@ -108,3 +108,59 @@
     mongo --host member1.example.com:27017
     mongos>
     sh.addShard("shard1/member1.example.com:27010,member3.example.com:27010,member5.example.com:27010")
+
+8 创建分片表
+===================
+
+::
+
+    #连接到mongos， 创建分片集合
+    mongo --host member1.example.com:27017
+
+    mongos> sh.status()
+    mongos> sh.enableSharding('foo')
+    mongos> sh.shardCollection('foo.bar', {_id:'hashed'}
+    mongos> sh.status()
+
+    # 插入测试数据
+    use foo
+    for ( var i = 0; i <10000; i++){
+        db.bar.insert({i:i});
+    }
+
+9 创建第2个分片的复制集
+========================
+
+在member2/member4/member6 上执行以下命令：
+::
+
+    mongod --bind_id 0.0.0.0 --replSet Shard2 --dbpath /data/shard2 --logpath /data/shard2/mongod.log --port 27011 --fork --shardsvr --wiredTigerCacheSizeGB 1
+
+
+10 初始化第二个分片的复制集
+=================================
+
+::
+
+    # mongo --host member2.example.com:27011
+
+    rs.initiate({
+        _id:"shard2",
+        "members":[
+            {"_id": 0, "host": "member2.example.com:27011"}
+            {"_id": 1, "host": "member4.example.com:27011"}
+            {"_id": 2, "host": "member6.example.com:27011"}
+        ]
+    })
+
+11 加入第2个分片
+=====================
+
+::
+
+    # 连接到mongos ， 添加分片
+    mongos --host member1.example.com:27017
+
+    mongos> sh.addShard("shard2/member2.example.com:27011,member4.example.com:27011,member6.example.com:27011")
+    mongos> sh.status()
+
