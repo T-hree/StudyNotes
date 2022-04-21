@@ -74,6 +74,7 @@
             {"_id":2, "host":"member5.example.com:27010"}
         ]
     })
+    { "ok" : 1 }
 
 5 创建 config server 复制集
 ===================================
@@ -98,17 +99,37 @@
         ]
     })
 
+    {
+        "ok" : 1,
+        "$gleStats" : {
+                "lastOpTime" : Timestamp(1650523162, 1),
+                "electionId" : ObjectId("000000000000000000000000")
+        },
+        "lastCommittedOpTime" : Timestamp(1650523162, 1)
+    }
+
 7 在第一台机器上搭建mongos
 =================================
 
 ::
+
     # 启动mongos服务
     mongos --bind_id 0.0.0.0 --logpath /data/mongos/mongos.log --port 27017 --fork --configdb config/member1.example.com:27019,member3.example.com:27019,member5.example.com:27019
     # 连接到mongos
     mongo --host member1.example.com:27017
-    mongos>
-    sh.addShard("shard1/member1.example.com:27010,member3.example.com:27010,member5.example.com:27010")
-
+    mongos> sh.addShard("shard1/member1.example.com:27010,member3.example.com:27010,member5.example.com:27010")
+    {
+        "shardAdded" : "shard1",
+        "ok" : 1,
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1650524253, 7),
+                "signature" : {
+                        "hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+                        "keyId" : NumberLong(0)
+                }
+        },
+        "operationTime" : Timestamp(1650524253, 7)
+    }
 8 创建分片表
 ===================
 
@@ -118,15 +139,51 @@
     mongo --host member1.example.com:27017
 
     mongos> sh.status()
+
+    --- Sharding Status ---
+      sharding version: {
+            "_id" : 1,
+            "minCompatibleVersion" : 5,
+            "currentVersion" : 6,
+            "clusterId" : ObjectId("6260fc241b454ae0793b2a1c")
+      }
+      shards:
+            {  "_id" : "shard1",  "host" : "shard1/member1.example.com:27010,member2.example.com:27011,member3.example.com:27012",  "state" : 1,  "topologyTime" : Timestamp(1650524253, 4) }
+      active mongoses:
+            "5.0.6" : 1
+      autosplit:
+            Currently enabled: yes
+      balancer:
+            Currently enabled: yes
+            Currently running: no
+            Failed balancer rounds in last 5 attempts: 0
+            Migration results for the last 24 hours:
+                    No recent migrations
+      databases:
+            {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+
     mongos> sh.enableSharding('foo')
-    mongos> sh.shardCollection('foo.bar', {_id:'hashed'}
+
+    mongos> sh.shardCollection('foo.bar', {_id:'hashed'})
     mongos> sh.status()
+
+    # 相比上次 status() 多出来的块信息
+    {  "_id" : "foo",  "primary" : "shard1",  "partitioned" : true,  "version" : {  "uuid" : UUID("96fbff23-b771-4146-8fec-fe49640bb7c8"),  "timestamp" : Timestamp(1650524455, 1),  "lastMod" : 1 } }
+    foo.bar
+            shard key: { "_id" : "hashed" }
+            unique: false
+            balancing: true
+            chunks:
+                    shard1  2
+            { "_id" : { "$minKey" : 1 } } -->> { "_id" : NumberLong(0) } on : shard1 Timestamp(1, 0)
+            { "_id" : NumberLong(0) } -->> { "_id" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 1)
 
     # 插入测试数据
     use foo
     for ( var i = 0; i <10000; i++){
         db.bar.insert({i:i});
     }
+
 
 9 创建第2个分片的复制集
 ========================
@@ -159,8 +216,33 @@
 ::
 
     # 连接到mongos ， 添加分片
-    mongos --host member1.example.com:27017
+    mongo --host member1.example.com:27017
 
     mongos> sh.addShard("shard2/member2.example.com:27011,member4.example.com:27011,member6.example.com:27011")
+
+    {
+        "shardAdded" : "shard2",
+        "ok" : 1,
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1650526483, 3),
+                "signature" : {
+                        "hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+                        "keyId" : NumberLong(0)
+                }
+        },
+        "operationTime" : Timestamp(1650526483, 3)
+    }
+
     mongos> sh.status()
+    # 与只有一个分片时的 块分配发生了变化
+    foo.bar
+        shard key: { "_id" : "hashed" }
+        unique: false
+        balancing: true
+        chunks:
+                shard1  1   # 原来是 shard1 2 两个块都在 shard1上
+                shard2  1   # 现在 两个分片 分别有一个块
+        { "_id" : { "$minKey" : 1 } } -->> { "_id" : NumberLong(0) } on : shard2 Timestamp(2, 0)
+        { "_id" : NumberLong(0) } -->> { "_id" : { "$maxKey" : 1 } } on : shard1 Timestamp(2, 1)
+
 
