@@ -28,23 +28,23 @@ MongoDB的备份机制分为：
 方案一 ： 延迟节点备份
 ==============================
 
-.. image:: ../static/mongodb/img/img_100.png
+.. image:: ../_static/mongodb/img/img_100.png
     :align: center
 
-.. image:: ../static/mongodb/img/img_101.png
+.. image:: ../_static/mongodb/img/img_101.png
     :align: center
 
 方案二： 全量备份加 Oplog
 ==================================
 
-.. image:: ../static/mongodb/img/img_102.png
+.. image:: ../_static/mongodb/img/img_102.png
     :align: center
 
 - 最近的oplog 已经在 oplog.rs 集合中， 因此可以在定期从集合中导出便得到了 oplog
 - 如果主节点上的oplog.rs 集合足够打， 全量备份足够密集， 自然也可以不用备份oplog
 - 只要有覆盖整个时间段的oplog， 就可以结合全量备份得到任意时间点的备份
 
-.. image:: ../static/mongodb/img/img_103.png
+.. image:: ../_static/mongodb/img/img_103.png
     :align: center
 
 复制文件全量备份注意事项
@@ -74,7 +74,7 @@ mongodump:
 - 使用mongodump备份最为灵活， 但速度上也是最慢的
 - mongodump出来的数据不能表示某个时间点， 只是某个时间段
 
-.. image:: ../static/mongodb/img/img_104.png
+.. image:: ../_static/mongodb/img/img_104.png
     :align: center
 
 解决方案： 幂等性
@@ -91,13 +91,13 @@ mongodump:
 这三条oplog顺序执行， 无论执行多少次， 最终得到结果均是：
 `{_id:1, a:10},{_id:2, b=20}`
 
-.. image:: ../static/mongodb/img/img_105.png
+.. image:: ../_static/mongodb/img/img_105.png
     :align: center
 
 用幂等性解决一致性问题
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: ../static/mongodb/img/img_106.png
+.. image:: ../_static/mongodb/img/img_106.png
     :align: center
 
 
@@ -140,12 +140,14 @@ mongodump:
 
 mongodump
 ----------------
+
 在Mongodb中我们使用mongodump命令来备份MongoDB数据。该命令可以导出所有数据到指定目录中。
 
 mongodump命令可以通过参数指定导出的数据量级转存的服务器。
 
 语法
-^^^^^^^^^^^^6
+^^^^^^^^^^^^
+
 mongodump命令脚本语法如下：
 ::
 
@@ -222,3 +224,54 @@ mongorestore命令脚本语法如下：
 ::
 
     mongodump -h 127.0.0.1:27017 --oplog
+
+mongodump/mongorestore
+------------------------------
+
+得到一下目录：
+::
+
+    dump
+    |---admin
+    |   |-----system.version.bson
+    |   |-----system.version.metadata.json
+    |---oplog.bson  # oplog
+    |---test
+        |--- random.bson   # 数据文件
+        |--- random.metadata.json  # 集合元数据
+
+.. image:: ../_static/mongodb/img/img_107.png
+    :align: center
+
+更复杂的重放oplog
+=====================
+
+假设全量备份已经恢复到数据库中（无论使用快照、mongodump或复制数据文件的方式），要重放一部分增量怎么办？
+
+- 导主节点上的oplog：
+    - mongodump --host 127.0.0.1 -d local -c oplog.rs
+    - 可以通过 --query参数添加时间范围
+- 使用bsondump查看导出的oplog, 找到需要截止的时间点：
+    - 例如: `{"op":"i","ns":"test.random","ui":{"$binary":{"base64":"9G/NuwKlToWbqDBRnq84bw==","subType":"04"}},"o":{"_id":{"$oid":"62616217e02a9a77660d7fdd"},"x":{"$numberDouble":"75393.73107331782"}},"ts":{"$timestamp":{"t":1650549271,"i":21}},"t":{"$numberLong":"1"},"v":{"$numberLong":"2"},"wall":{"$date":{"$numberLong":"1650549271949"}}}`
+- 恢复到指定时间点
+    - 利用 --oplogLimit 指定恢复到这条记录之前
+    - mongorestore -h 127.0.0.1 --oplogLimit "1577355175:1" --oplogFile dump/local/oplog.rs
+
+分片集备份
+====================
+
+分片集备份大致与复制集原理相同， 不过存在一下差异：
+
+- 应分别为每个分片和config备份
+- 分片集备份不仅要考虑一个分片内的一致性问题， 还要考虑分片间的一致性问题，因此每个片要能够恢复到同一个时间点
+
+分片集的增量备份
+----------------------
+
+尽管理论上我们可以使用与复制集相同的方式来为分片集完成增量备份，但实际上分片集的情况更加复杂，这种复杂性来自两个方面：、
+
+
+- 各个数据节点的时间不一致：每个数据节点很难完全恢复到一个真正的一致时间点上，通常只能做到大致一致，而这种大致一致通常足够好，除了以下情况
+- 分片间的数据迁移：当一部分数据从一个片迁移到另一个片时， 最终数据到底在哪里取决于config中的元数据。如果元数据于数据节点之间的时间差异正好导致数据时间已经迁移到新分片上，而元数据仍然认为数据在旧分片上，就会导致数据丢失情况。虽然这种情况发生的概率很小，但仍有可能导致问题
+
+要避免上述问题的发送， 只有定期停止均衡器， 只有在均衡器停止期间，增量回复才能保证正确
