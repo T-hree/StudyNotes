@@ -5,19 +5,19 @@
 容灾级别
 =================
 
-.. image:: ../static/mongodb/img/img_145.png
+.. image:: ../_static/mongodb/img/img_145.png
     :align: center
 
 双活的技术组件
 ====================
 
-.. image:: ../static/mongodb/img/img_146.png
+.. image:: ../_static/mongodb/img/img_146.png
     :align: center
 
 网络层解决方案
 -----------------
 
-.. image:: ../static/mongodb/img/img_147.png
+.. image:: ../_static/mongodb/img/img_147.png
     :align: center
 
 应用层解决方案
@@ -27,7 +27,7 @@
 - 使用同一个Session
 - 使用同一套数据
 
-.. image:: ../static/mongodb/img/img_148.png
+.. image:: ../_static/mongodb/img/img_148.png
     :align: center
 
 数据库解决方案
@@ -35,7 +35,7 @@
 
 数据跨中心同步
 
-.. image:: ../static/mongodb/img/img_149.png
+.. image:: ../_static/mongodb/img/img_149.png
     :align: center
 
 MongoDB三中心方案
@@ -46,27 +46,27 @@ MongoDB三中心方案
 
 *正常运行状态集群内一个主节点接受写， 其他节点只读*
 
-.. image:: ../static/mongodb/img/img_150.png
+.. image:: ../_static/mongodb/img/img_150.png
     :align: center
 
 *主节点故障， 主数据中心内自动切主， 切换时间5-10秒*
 
-.. image:: ../static/mongodb/img/img_151.png
+.. image:: ../_static/mongodb/img/img_151.png
     :align: center
 
 *主数据中心对外网络故障 或整个数据中心不可用 主节点自动降级， 从节点升级为主节点， 选举时间为 5- 30秒*
 
-.. image:: ../static/mongodb/img/img_152.png
+.. image:: ../_static/mongodb/img/img_152.png
     :align: center
 
 *双中心双活，分流模式  从节点需要跨中心写到主节点 同城双中心 需要低延迟专线*
 
-.. image:: ../static/mongodb/img/img_153.png
+.. image:: ../_static/mongodb/img/img_153.png
     :align: center
 
 *正常运行  writeConcern:majority 需要等待从节点返回*
 
-.. image:: ../static/mongodb/img/img_154.png
+.. image:: ../_static/mongodb/img/img_154.png
     :align: center
 
 MongoDB集群两地三中心不是的考量点
