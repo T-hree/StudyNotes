@@ -66,3 +66,35 @@ MongoDB读写性能机制
 
 .. image:: ../_static/mongodb/img/img_137.png
     :align:  center
+
+
+执行请求（写）
+--------------------------
+
+.. image:: ../_static/mongodb/img/img_138.png
+    :align:  center
+
+.. image:: ../_static/mongodb/img/img_139.png
+    :align:  center
+
+合并结果
+------------------
+
+.. image:: ../_static/mongodb/img/img_140.png
+    :align:  center
+
+- 如果顺序不重要则不要排序
+- 尽可能使用带片键的查询条件以减少参与查询的分片数
+
+网络的考量
+=====================
+
+.. image:: ../_static/mongodb/img/img_141.png
+    :align:  center
+
+
+性能瓶颈总结
+=====================
+
+.. image:: ../_static/mongodb/img/img_142.png
+    :align:  center
