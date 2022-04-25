@@ -28,8 +28,6 @@
    virtualenv [虚拟环境名称]
    virtualenv venv
 
-   #如果不想使用系统的包,加上–no-site-packeages参数
-   virtualenv  --no-site-packages 创建路径名
 
 .. _3-激活环境-1:
 

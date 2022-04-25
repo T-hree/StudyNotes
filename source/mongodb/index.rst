@@ -30,6 +30,9 @@ mongodb!
    MongoDB监控
    Mongodb备份与恢复
    MongoDB安全架构
+   安全加固示例
+   Mongodb索引机制
+   MongoDB读写性能机制
 
 
 

@@ -1,0 +1,86 @@
+==========================
+安全加固
+==========================
+
+- 1.启用身份认证
+    - 启用访问控制并强制执行身份认证
+    - 使用强密码
+- 2.权限控制
+    - 基于 Deny All 原则
+    - 不给多余的权限
+- *.加密和审计
+    - 启用传输加密、数据保护和活动审计
+- *.网络加固
+    - 内网部署服务器
+    - 设置防火墙
+    - 操作系统设置
+- *.遵循安全准则
+    - 遵守不同行业或地区安全标准合规性要求
+
+合理配置权限
+==================
+
+- 创建管理员
+- 使用复杂密码
+- 不同用户不同账号
+- 应用隔离
+- 最小权限原则
+
+
+启用加密
+==================
+
+- 使用TLS最为传输协议
+- 使用4.2版本的字段级加密对敏感字段加密
+- 如有需要， 使用企业版进行落盘加密
+- 如有需要， 使用企业版并启用审计日志
+
+网络和操作系统加固
+==========================
+
+- 使用专用用户运行MongoDB
+    - 不建议在操作系统层使用root用户运行MongoDB
+- 限制网络开放度
+    - 通过防火墙，iptables 规则控制对MongoDB的访问
+    - 使用VPN/VPCs可以创建一个安全通道， MongoDB服务不应该直接暴露在互联网上
+    - 使用白名单列表限制允许访问的网段
+    - 使用 bind_ip 绑定一个具体地址
+    - 修改默认监听端口：27017
+- 使用安全配置选项运行MongoDB
+    - 如果不需要执行JavaScript脚本， 使用 --noscripting 禁止脚本执行
+    - 如果使用老版本MongoDB， 关闭 http 接口： net.http.enabled = False net.http.JSONPEnabled=False
+    - 如果使用老版本MongoDB， 关闭Rest API 接口： net.http.RESTInterfaceEnabled = False
+
+Demo ： 启用认证
+============================
+
+| 方式一： 命令行通过 "--auth" 参数 启动 mongod
+| 方式二： 配置文件方式  在security下 添加 "authorization:enabled"
+
+`mongod --auth --port 27071 --dbpath /data/db --logpath /data/db/mongod.log`
+
+启用鉴权后， 无密码可以登录， 但是只能执行创建用户操作
+::
+
+    mongo
+    use admin
+    db.createUser({user:'superuser',pwd:'password','roles:[{role:'root',db:'admin'}]})
+
+安全登录， 执行如下命令查看认证 机制：
+::
+
+    mongo -u superuser -p password --authenticationDatabase admin
+    >db.runCommand({getParameter:1, authenticationMechanisms:1})
+        {
+            "authenticationMechanisms" : [
+                    "MONGODB-X509",
+                    "SCRAM-SHA-1",
+                    "SCRAM-SHA-256"
+            ],
+            "ok" : 1
+}
+
+从数据库中查看用户：
+::
+
+    db.system.users.find()
