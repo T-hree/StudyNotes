@@ -12,8 +12,10 @@ git!
 
    git撤销、还原、放弃本地文件修改
    CI_CD自动部署
-
-
+   githug通过详解
+   git commit --amend 修改git提交记录用法详解
+   git rebase --onto
+   指定时间提交--date
 
 
 

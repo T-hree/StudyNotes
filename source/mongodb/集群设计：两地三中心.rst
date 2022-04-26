@@ -108,11 +108,11 @@ MongoDB集群两地三中心不是的考量点
 通过命令行启动：
 ::
 
-    mongod --replSet demo --bind_ip 0.0.0.0 --dbpath /data/db1 --logpath /data/db1/mongod.log --fork --port 10001
-    mongod --replSet demo --bind_ip 0.0.0.0 --dbpath /data/db2 --logpath /data/db2/mongod.log --fork --port 10002
-    mongod --replSet demo --bind_ip 0.0.0.0 --dbpath /data/db3 --logpath /data/db3/mongod.log --fork --port 10003
-    mongod --replSet demo --bind_ip 0.0.0.0 --dbpath /data/db4 --logpath /data/db4/mongod.log --fork --port 10004
-    mongod --replSet demo --bind_ip 0.0.0.0 --dbpath /data/db5 --logpath /data/db5/mongod.log --fork --port 10005
+    mongod --replSet demo --bind_ip 0.0.0.0 --dbpath /data/db1 --logpath /data/db1/mongod.log --fork --port 27011
+    mongod --replSet demo --bind_ip 0.0.0.0 --dbpath /data/db2 --logpath /data/db2/mongod.log --fork --port 27012
+    mongod --replSet demo --bind_ip 0.0.0.0 --dbpath /data/db3 --logpath /data/db3/mongod.log --fork --port 27013
+    mongod --replSet demo --bind_ip 0.0.0.0 --dbpath /data/db4 --logpath /data/db4/mongod.log --fork --port 27014
+    mongod --replSet demo --bind_ip 0.0.0.0 --dbpath /data/db5 --logpath /data/db5/mongod.log --fork --port 27015
 
 
 通过conf配置文件启动:
@@ -144,6 +144,7 @@ MongoDB集群两地三中心不是的考量点
 --------------------------
 
 ::
+
     demo:PRIMARY> conf = rs.config()
     demo:PRIMARY> conf.members[1].priority = 10
     10
