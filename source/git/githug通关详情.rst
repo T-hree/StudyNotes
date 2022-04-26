@@ -24,8 +24,6 @@ githug通过详解
 
 第1条命令把当前环境“藏”起来；第2条命令列出被“藏”的环境；第3条命令恢复被“藏”的环境。
 
-第13关过关画面如下：\ |image1|
-
 第14关 rename
 =============
 
@@ -58,8 +56,8 @@ githug通过详解
 
 在执行此命令之后，查看日志时会发现最后一次提交的日志消失了。
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/截屏2022-03-14 上午10.40.38.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/截屏2022-03-14 上午10.40.38.png
+   :align: center
 
 .. _第23关-checkoutfile:
 
@@ -108,8 +106,8 @@ Git 被称为分布式版本管理系统的原因。
 
 第24关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/截屏2022-03-14 上午10.51.43.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/截屏2022-03-14 上午10.51.43.png
+   :align: center
 
 .. _第25关-remoteurl:
 
@@ -134,8 +132,8 @@ URL 了。
 
 第25关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314105326745-20220314105528866.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314105326745-20220314105528866.png
+   :align: center
 
 第26关 pull
 ===========
@@ -156,8 +154,8 @@ master。该命令执行之后，远程仓库的代码会自动合并到本地�
 
 第26关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314110603740.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314110603740.png
+   :align: center
 
 .. _第27关-remoteadd:
 
@@ -182,8 +180,8 @@ master。该命令执行之后，远程仓库的代码会自动合并到本地�
 
 第27关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314111038989.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314111038989.png
+   :align: center
 
 第28关 push
 ===========
@@ -234,14 +232,14 @@ push 之后，远程仓库就会有4次更新了。
 
 第28关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314113135279.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314113135279.png
+   :align: center
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314113225665.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314113225665.png
+   :align: center
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314113307922.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314113307922.png
+   :align: center
 
 第29关 diff
 ===========
@@ -257,8 +255,8 @@ push 之后，远程仓库就会有4次更新了。
 
 第29关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314114632228.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314114632228.png
+   :align: center
 
 第30关 blame
 ============
@@ -283,8 +281,8 @@ HASH
 
 第30关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314115027232.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314115027232.png
+   :align: center
 
 第31关 branch
 =============
@@ -310,8 +308,8 @@ HASH
 
 第31关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314143702592.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314143702592.png
+   :align: center
 
 第32关 checkout
 ===============
@@ -348,8 +346,8 @@ HASH
 
 第32关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314143856180.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314143856180.png
+   :align: center
 
 .. _第33关-checkouttag:
 
@@ -373,8 +371,8 @@ tag。当我们要切换到指定的 tag 时，采用以下命令：
 
 第33关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314144532140.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314144532140.png
+   :align: center
 
 .. _第34关-checkouttagoverbranch:
 
@@ -399,8 +397,8 @@ tag。当我们要切换到指定的 tag 时，采用以下命令：
 
 第34关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314144657663.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314144657663.png
+   :align: center
 
 .. _第35关-branchat:
 
@@ -424,8 +422,8 @@ tag。当我们要切换到指定的 tag 时，采用以下命令：
 
 第35关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314144918069.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314144918069.png
+   :align: center
 
 .. _第36关-deletebranch:
 
@@ -448,8 +446,8 @@ tag。当我们要切换到指定的 tag 时，采用以下命令：
 
 第36关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314145103198.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314145103198.png
+   :align: center
 
 .. _第37关-pushbranch:
 
@@ -473,8 +471,8 @@ tag。当我们要切换到指定的 tag 时，采用以下命令：
 
 第37关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314145355774.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314145355774.png
+   :align: center
 
 第38关 merge
 ============
@@ -499,8 +497,8 @@ tag。当我们要切换到指定的 tag 时，采用以下命令：
 
 第38关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314145735740.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314145735740.png
+   :align: center
 
 第39关 fetch
 ============
@@ -529,8 +527,8 @@ tag。当我们要切换到指定的 tag 时，采用以下命令：
 
 第39关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314145946728.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314145946728.png
+   :align: center
 
 第40关 rebase
 =============
@@ -570,8 +568,8 @@ tag。当我们要切换到指定的 tag 时，采用以下命令：
 
 第40关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314150820452.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314150820452.png
+   :align: center
 
 .. _第41关--git-rebase---onto:
 
@@ -641,14 +639,14 @@ wrong_branch分支：
 
 第41关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220315155112986.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220315155112986.png
+   :align: center
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220315155135190-20220315155309361-20220315155316670.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220315155135190-20220315155309361-20220315155316670.png
+   :align: center
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220315155206113.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220315155206113.png
+   :align: center
 
 第41关 repack
 =============
@@ -689,8 +687,8 @@ wrong_branch分支：
 
 第41关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314152422553.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314152422553.png
+   :align: center
 
 第42关 cherry-pick
 ==================
@@ -714,11 +712,11 @@ cherry-pick 命令就是摘下其中的一个果实。
 
 第42关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314153058653.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314153058653.png
+   :align: center
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314153112319.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314153112319.png
+   :align: center
 
 第43关 grep
 ===========
@@ -739,8 +737,8 @@ cherry-pick 命令就是摘下其中的一个果实。
 
 第43关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314153332586.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314153332586.png
+   :align: center
 
 .. _第44关-renamecommit:
 
@@ -828,8 +826,8 @@ cherry-pick 命令就是摘下其中的一个果实。
 
 第44关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314154244695.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314154244695.png
+   :align: center
 
 第45关 squash
 =============
@@ -911,8 +909,8 @@ cherry-pick 命令就是摘下其中的一个果实。
 
 第45关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314154904394.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314154904394.png
+   :align: center
 
 .. _第46关-mergesquash:
 
@@ -943,8 +941,8 @@ cherry-pick 命令就是摘下其中的一个果实。
 
 第46关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314155511456.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314155511456.png
+   :align: center
 
 第47关 reorder
 ==============
@@ -1003,8 +1001,8 @@ cherry-pick 命令就是摘下其中的一个果实。
 
 第47关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314155705317.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314155705317.png
+   :align: center
 
 第48关 bisect
 =============
@@ -1125,8 +1123,8 @@ Git 继续进行二分查找，这次定位的哈希值是
 
 第48关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314161331138.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314161331138.png
+   :align: center
 
 .. _第49关-stagelines:
 
@@ -1169,8 +1167,8 @@ Git 继续进行二分查找，这次定位的哈希值是
 
 第49关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314161647763.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314161647763.png
+   :align: center
 
 .. _第50关-findoldbranch:
 
@@ -1202,8 +1200,8 @@ Git 提供了一个工具，可以用来查看你在 Git 上的历史操作：
 
 第50关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314162031818.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314162031818.png
+   :align: center
 
 第51关 revert
 =============
@@ -1231,8 +1229,8 @@ Git 就会创建一个删除此文件的提交。语法如下：
 
 第51关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314162431316.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314162431316.png
+   :align: center
 
 第52关 restore
 ==============
@@ -1280,8 +1278,8 @@ Git 就会创建一个删除此文件的提交。语法如下：
 
 第52关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314162636130.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314162636130.png
+   :align: center
 
 第53关 conflict
 ===============
@@ -1329,8 +1327,8 @@ poem.txt 的文件的第2行代码发生了冲突。
 
 第53关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314163230751.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314163230751.png
+   :align: center
 
 第54关 submodule
 ================
@@ -1355,8 +1353,8 @@ poem.txt 的文件的第2行代码发生了冲突。
 
 第54关过关画面如下：
 
-.. figure:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314163807050.png
-   :alt: 
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220314163807050.png
+   :align: center
 
 第55关 contribute
 =================
@@ -1372,4 +1370,4 @@ poem.txt 的文件的第2行代码发生了冲突。
    贡献。设计本关的目的就是鼓励你向 Githug 提交贡献，而不是测试你使用
    pull request 的技能。贡献包括新的关卡、修复BUG和改善文档。
 
-.. |image1| image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220315094506374.png
+.. image:: https://gitee.com/T-hree/Blog/raw/master/img/image-20220315094506374.png

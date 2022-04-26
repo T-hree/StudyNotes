@@ -22,7 +22,7 @@ MongoDB监控
 serverStatus() Output
 ===============================
 
-.. image:: ../static/mongodb/img/img_96.png
+.. image:: ../_static/mongodb/img/img_96.png
     :align: center
 
 serverStatus() 主要信息
@@ -52,12 +52,12 @@ serverStatus() 主要信息
 建议监控指标
 ==================
 
-.. image:: ../static/mongodb/img/img_97.png
+.. image:: ../_static/mongodb/img/img_97.png
     :align: center
 
-.. image:: ../static/mongodb/img/img_98.png
+.. image:: ../_static/mongodb/img/img_98.png
     :align: center
 
-.. image:: ../static/mongodb/img/img_99.png
+.. image:: ../_static/mongodb/img/img_99.png
     :align: center
 
