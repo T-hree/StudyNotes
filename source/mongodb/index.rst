@@ -28,7 +28,6 @@ mongodb!
    分片集群设计
    分片集群搭建及扩容
    MongoDB监控
-   Mongodb备份与恢复
    MongoDB安全架构
    安全加固示例
    Mongodb索引机制
@@ -37,6 +36,7 @@ mongodb!
    集群设计：两地三中心
    全球多写
    MongoDB上线及升级
+   架构相关/index
 
 
 

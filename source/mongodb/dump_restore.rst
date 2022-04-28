@@ -216,6 +216,7 @@ mongorestore命令脚本语法如下：
 
 为了模拟dump过程中的数据变化， 我们开启一个循环插入数据的线程：
 ::
+
     for(var i = 0; i<100000; i++){
         db.random.insertOne({x:Math.random()*100000})
     }

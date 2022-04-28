@@ -12,6 +12,7 @@ github官方文档：`点击此处跳转 <https://docs.github.com/cn/actions/qui
 
 选择好对应的服务器版本后：
 ::
+
     先下载
     # Create a folder
     $ mkdir actions-runner && cd actions-runner# Download the latest runner package

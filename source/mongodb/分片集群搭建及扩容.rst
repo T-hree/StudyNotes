@@ -58,6 +58,7 @@
 
 在member1/member3/member5 上执行以下命令：
 ::
+
     mongod --bind_ip 0.0.0.0 --replSet shard1 --dbpath /data/shard1 --logpath /data/shard1/mongod.log --port 27010 --fork --shardsvr --wiredTigerCacheSizeGB 1
 
 4 初始化第一个分片复制集

@@ -10,12 +10,13 @@ git!
    :maxdepth: 2
    :caption: Contents:
 
-   githug通过详解
+   CI_CD自动部署
+   githug通关详情
    git撤销、还原、放弃本地文件修改
    git commit --amend 修改git提交记录用法详解
    git rebase --onto
    指定时间提交--date
-   CI_CD自动部署
+
 
 
 

@@ -3,15 +3,13 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Python
+flask
 ======================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   Marshmallow
-   虚拟环境
-   flask/index
+   flask-cors 解决跨域问题
 
    
