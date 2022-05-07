@@ -111,6 +111,83 @@ mysql - mongo
 
     mysqldump database_name -h host -u user -p -T mysql_files
 
-    cat customers.txt
+    [root@sanye test]# cd mysql_files
+    [root@sanye test]# cat user.txt
+        name    age     gander
+        123     123     12
+        112312  123     21
+        123     123     12
+        123     123     123
+        123     123     3
 
     mongoimport -d database_name -c customers --type==csv --headerline customers.txt
+    [root@sanye test]# mongoimport --port 27013 -d testdemo -c test --type=csv --headerline test.txt
+    2022-05-05T16:48:37.587+0800    connected to: mongodb://localhost:27013/
+    2022-05-05T16:48:37.652+0800    2 document(s) imported successfully. 0 document(s) failed to import.
+
+
+2 批量同步
+-------------------------
+
+步骤：
+    - 安装同步工具（如Kettle/Talend）
+    - 创建输入源（关系型数据库）
+    - 创建输出源（MongoDB）
+    - 编辑数据同步任务
+    - 执行
+
+备注：
+    - 适用批量同步， 定期更新， 特别是每晚跑批的场景
+    - 支持基于时间戳的增量同步， 需要源表有合适的时间戳支持
+    - 对源库有较明显的性能影响， 不宜频繁查询
+    - 不支持实时同步
+
+.. image:: ../../_static/mongodb/img/img_184.png
+    :align: center
+
+3 实时同步
+-------------------
+
+步骤：
+    - 安装实时同步工具（如Informatica / Tapdata）
+    - 创建输入源（关系型数据库）
+    - 创建输出源（MongoDB）
+    - 编辑实时数据同步任务
+    - 执行
+
+备注：
+    - 基于源库的日志文件解析机制， 可以实现秒级数据的同步
+    - 对源库性能影响较小
+    - 可以支持应用的无缝迁移
+
+.. image:: ../../_static/mongodb/img/img_185.png
+    :align: center
+
+
+4 应用主导迁移
+--------------------
+
+步骤：
+    - 1 升级已有应用支持MongoDB
+    - 2 数据插入请求直接进入MongoDB
+    - 3 数据查询和更新请求首先定向到MongoDB
+    - 4 如果记录不存在， 从RDBMS读出来并写入到MongoDB
+    - 5 重复步骤3
+    - 6 当步骤4 在限定时间段（一个星期、 一个月）都偶没有被调用， 认为迁移完成
+
+备注：
+    - 需要研发团队配合， 有一定开发和测试量
+    - 为保证我不遗漏数据， 仍然先要执行一次批量同步
+
+.. image:: ../../_static/mongodb/img/img_186.png
+    :align: center
+
+数据迁移方式比较
+--------------------------
+
+.. image:: ../../_static/mongodb/img/img_187.png
+    :align: center
+
+
+
+
