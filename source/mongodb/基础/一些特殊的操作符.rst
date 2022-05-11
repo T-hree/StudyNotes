@@ -30,6 +30,53 @@ $type
 选择某个字段为某种特定类型的文档
 
 
+$size
+------------------------
+
+数组元素个数
+
+.. code-block::
+
+    db.collections.find({`array_name`:{$size:50}})
+
+$all
+-------------------------
+
+匹配所有
+
+这个操作符跟SQL 语法的in 类似，但不同的是, in 只需满足( )内的某一个值即可, 而$all 必须满足[ ]内的所有值，例如:
+
+::
+
+    db.users.find({age : {$all : [6, 8]}});
+    可以查询出：
+    {name: 'David', age: 26, age: [ 6, 8, 9 ] }
+    但查询不出：
+    {name: 'David', age: 26, age: [ 6, 7, 9 ] }
+
+$elemMatch
+------------------
+
+$elemMatch 数组查询操作用于查询数组值中至少有一个能完全匹配所有的查询条件的文档。语法格式如下：
+
+`{ <field>: { $elemMatch: { <query1>, <query2>, ... } } }`
+
+| 如果只有一个查询条件就没必要使用 $elemMatch。
+
+数组中是一个个对象 , 假设mongo的test集合中有如下的文档:
+::
+
+    # documents
+    {'_id':xxx, 'name': '张三', 'visit_url': [{'proto', 'http', 'host': 'www.baidu.com'}, {'proto': 'https', 'host':'www.qq.com'}], 'date': ISODate('2019-09-04 00:00:00')},
+    {'_id':xxx, 'name': '李四', 'visit_url': [{'proto', 'https', 'host': 'aliyun.com'}, {'proto': 'https', 'host':'www.baidu.com'}, 'date': ISODate('2019-09-04 12:00:00')},
+
+mongo语句:
+::
+
+    db.collection.find({'visit_url': {'$elemMatch': {'proto': 'https', 'host': 'www.baidu.com'}}})
+
+
+
 
 
 评估查询操作符(Evaluation Query Operators)
@@ -112,3 +159,5 @@ $where
 ------------------------
 
 通过JavaScript表达式匹配文档
+
+

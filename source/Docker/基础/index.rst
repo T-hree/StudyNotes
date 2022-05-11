@@ -3,26 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to StudyNotes's documentation!
+基础!
 ======================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
 
-   python/index
-   mysql/index
-   RST语法/index
-   mongodb/index
-   git/index
-   linux/index
-   Docker/index
+   Docker常用命令
 
 
 
-Indices and tables
-==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+
