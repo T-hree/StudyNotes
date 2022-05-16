@@ -264,12 +264,43 @@ docker rmi
 - `docker attach 容器id或者容器名称`
 
 区别：
-    - attach直接进入容器启动命令的终端， 不会启动新的进程 用exit退出， 会导致容器的停止
+    - attach 直接进入容器启动命令的终端， 不会启动新的进程 用exit退出， 会导致容器的停止
     - exec 是在容器中打开新的终端， 并且可以启动新的进程，用exit退出，不会导致容器的停止
 
+从容器内拷贝文件到主机中
+---------------------------------
+
+`docker cp 容器ID:容器内路径 主机路径`
+
+::
+
+    xiaoyan@xiaoyan Desktop % docker ps
+    CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS                    NAMES
+    0a0a94ce1368   ubuntu    "/bin/bash"              14 minutes ago   Up 3 minutes                             vigorous_hamilton
+    xiaoyan@xiaoyan Desktop % docker cp 0a0a94ce1368:/tmp/a.txt ./test.txt
 
 
+导入和导出容器
+-----------------------
 
+export
+^^^^^^^^^^^^^^^^^
+
+导出容器的内容留作为一个tar归档文件[对应import命令]
+
+import
+^^^^^^^^^^^^^^^^^
+
+从tar包中的内容创建一个新的文件系统再导入为镜像[对应export命令]
+
+
+示例
+^^^^^^^^^^^^^^^^^
+
+- `docker export 容器ID > file.tar`
+    - `docker export a1c9f766c202 > redis.tar`
+- `cat file.tar | docker import - 镜像用户/镜像名:镜像版本号`
+    - `cat redis.tar | docker import - test/redis:v1`
 
 
 
