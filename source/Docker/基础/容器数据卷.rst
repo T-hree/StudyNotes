@@ -1,3 +1,101 @@
 =========================
 容器数据卷
 =========================
+
+注意：这里有一个坑！！！
+==============================
+
+Docker 挂载主机目录访问出现 cannot open directory : Permission denied
+解决办法： 在挂载目录后多加一个 --privileged=true 参数即可
+
+| 如果是CentOS7   安全模块会比之前系统版本加强， 不安全的会先禁用， 所以目录挂载的情况被默认为不安全你的行为
+| 在SELinux里面挂载目录被禁止掉了， 如果要开启， 我们一般使用 --privileged=true命令，扩大容器的权限 解决挂载目录没有权限的问题
+| 也即 使用该参数， container 内的root 拥有真正的 root 权限， 否则 container 内的root 只是外部的一个普通用户权限
+
+是什么
+======================
+
+卷就是目录或文件， 存在于一个或多个容器中， 由docker挂载到容器， 但不属于联合文件系统
+因此能够绕过 Union File System 提供 一些用于持续存储或共享数据的特性
+
+卷的设计目的就是 * 数据的持久化 * ， 完全独立于容器的生存周期， 应此Docker不会再容器删除时删除其挂载的卷
+
+有点类似 Redis里面的 rdb和aof文件
+将docker容器内的数据保存进宿主机的磁盘中
+
+能干嘛
+======================
+
+将运用与运行的环境打包镜像， run后形成容器实例运行， 但是我们对数据的要求希望 * 持久化 *
+
+Docker 容器产生的数据， 如果不备份， 那么当容器实例删除后， 容器内的数据自然也就没有了
+为了能保存数据在docker中我们使用卷。
+
+特点：
+    1. 数据卷可在容器之间共享或重用数据
+    2. 卷中的更改可以直接实时生效
+    3. 数据卷中的更改不会包含在镜像的更新中
+    4. 数据卷的生命周期一直持续到没有容器使用它为止
+
+示例
+==================
+
+1. 命令： `docker run -it --privileged=true -v /宿主机绝对路径:/容器内目录 镜像名`
+    - `docker run -it -v /Users/xiaoyan/Desktop/test/:/root/ --privileged ubuntu /bin/bash`
+2. 查看容器数据卷是否挂载成功
+    - `docker inspect 容器ID`
+    - .. code-block:: json
+
+           "Mounts": [
+                {
+                    "Type": "bind",  // 挂载类型
+                    "Source": "/host_mnt/Users/xiaoyan/Desktop/test",  // 主机路径
+                    "Destination": "/root",  // 容器内路径
+                    "Mode": "",
+                    "RW": true,  // read write 权限
+                    "Propagation": "rprivate"
+                }
+            ],
+3. 容器和宿主机 数据共享（对于挂载的数据卷）
+
+容器卷的 读写规则
+=============================
+
+默认为 可读可写
+--------------------
+
+::
+
+    docker run -it -v /Users/xiaoyan/Desktop/test/:/root/ --privileged ubuntu /bin/bash
+    ||  ||  等同于
+    docker run -it -v /Users/xiaoyan/Desktop/test/:/root/:rw --privileged ubuntu /bin/bash
+
+只读  ro(read only)
+----------------------------
+
+`docker run -it -v /Users/xiaoyan/Desktop/test/:/root/:ro --privileged ubuntu /bin/bash`
+
+ro模式下运行的容器  只能读取不能写
+如果宿主机写入内容， 可以同步给容器内， 容器也可以读到
+
+容器卷 继承 和 共享
+===========================
+
+共享
+------------
+
+多个 容器 同时指定一个宿主机目录:
+::
+
+    docker run -it --name u1 -v /Users/xiaoyan/Desktop/test/:/root --privileged=true ubuntu /bin/bash
+    docker run -it --name u2 -v /Users/xiaoyan/Desktop/test/:/root --privileged=true ubuntu /bin/bash
+    docker run -it --name u3 -v /Users/xiaoyan/Desktop/test/:/root --privileged=true ubuntu /bin/bash
+
+继承
+------------------
+
+参数:`--volumes-from 父类ID或名称`
+
+::
+
+    docker run -it --volumes-from 2cafcf1f973d --privileged=true ubuntu /bin/bash
