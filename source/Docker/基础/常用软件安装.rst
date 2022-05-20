@@ -48,8 +48,7 @@ MongoDB
 
 1. `docker search mongo`
 2. `docker pull mongo`
-#. `adocker run -dp 27012:27017 -v /Users/xiaoyan/Desktop/mongo/data/db/:/data/db/ -v /Users/xiaoyan/Desktop/mongo/log:/var/log/mongodb/ --privileged=true mongo`
-
+#. `docker run -dp 27012:27017 -v /Users/xiaoyan/Desktop/mongo/data/db/:/data/db/ -v /Users/xiaoyan/Desktop/mongo/log:/var/log/mongodb/ --privileged=true mongo`
 
 Redis
 ====================
@@ -57,10 +56,10 @@ Redis
 1. `docker search redis`
 2. `docker pull redis`
 #. 创建redis.conf 文件 修改以下配置
-    #.1 开启redis验证  `requirepass 123`
-    #.2 运行redis 远程连接  注释掉 `bind 127.0.0.1`
-    #.3 `daemonize no`  因为该配置和 docker run中的 -d 参数冲突， 会导致容器启动失败
-    #.4 开启redis数据持久化 `appendonly yes`
+    1. 开启redis验证  `requirepass 123`
+    2. 运行redis 远程连接  注释掉 `bind 127.0.0.1`
+    3. `daemonize no`  因为该配置和 docker run中的 -d 参数冲突， 会导致容器启动失败
+    4. 开启redis数据持久化 `appendonly yes`
 #. `docker run -dp 6379:6379 --name redis --privileged=true -v /Users/xiaoyan/Desktop/redis:/etc/redis -v /Users/xiaoyan/Desktop/redis/data:/date redis redis-server /etc/redis/redis.conf`
 
 Nginx

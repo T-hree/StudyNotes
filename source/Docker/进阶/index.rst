@@ -10,6 +10,7 @@
    :maxdepth: 2
    :caption: Contents:
 
+   常用软件集群安装
 
 
 
