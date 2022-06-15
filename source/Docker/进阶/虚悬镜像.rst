@@ -1,0 +1,33 @@
+========================
+虚悬镜像
+========================
+
+什么是
+==================
+
+仓库名， 标签都是<none>的镜像， 称为dangling image
+
+通过Dockerfile做一个虚悬镜像:
+::
+
+    FROM centos:7
+    RUN echo 'build success'
+
+    xiaoyan@xiaoyan Desktop % docker images
+    REPOSITORY   TAG       IMAGE ID       CREATED         SIZE
+    <none>       <none>    f5585adc3338   4 seconds ago   204MB
+    centos       7         eeb6ee3f44bd   9 months ago    204MB
+
+查看所有虚悬镜像`docker image ls -f dangling=true`
+
+虚悬镜像已经失去存在价值， 可以删除：
+::
+    docker image prune
+
+    xiaoyan@xiaoyan Desktop % docker image prune
+    WARNING! This will remove all dangling images.
+    Are you sure you want to continue? [y/N] y
+    Deleted Images:
+    deleted: sha256:f5585adc3338d51170f2ad8ebf406e7a0e9fad26f1e05c643acbf97337968153
+
+
