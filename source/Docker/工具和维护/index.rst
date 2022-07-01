@@ -3,18 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-进阶!
+工具和维护
 ======================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   常用软件集群安装
-   DockerFile相关
-   虚悬镜像
-   dockerfile单服务案例
-   docker_network
-   Docker-compose容器编排
+   可视化工具Portainer
+
 
 
