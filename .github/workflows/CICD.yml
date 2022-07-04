@@ -9,3 +9,4 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - run: make html
+      - run: docker restart $(docker ps -q --filter name=nginx)
