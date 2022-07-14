@@ -10,5 +10,6 @@ Kubernetes!
    :maxdepth: 2
    :caption: Contents:
    
-
+   Kubernetes基础概念
+   通过公网ip初始化
    
