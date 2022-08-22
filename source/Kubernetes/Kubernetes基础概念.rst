@@ -334,18 +334,12 @@ kubelet 现在每隔几秒就会重启，因为它陷入了一个等待 kubeadm 
 .. code:: shell
 
    #所有机器添加master域名映射，以下需要修改为自己的
-   echo "172.31.0.4  cluster-endpoint" >> /etc/hosts
+   echo "10.0.4.2  cluster-endpoint" >> /etc/hosts
 
 
 
    #主节点初始化
-   kubeadm init \
-   --apiserver-advertise-address=182.61.32.58 \
-   --control-plane-endpoint=cluster-endpoint \
-   --image-repository registry.cn-hangzhou.aliyuncs.com/lfy_k8s_images \
-   --kubernetes-version v1.20.9 \
-   --service-cidr=10.96.0.0/16 \
-   --pod-network-cidr=192.168.0.0/16
+
 
    #所有网络范围不重叠
 
@@ -355,9 +349,9 @@ kubelet 现在每隔几秒就会重启，因为它陷入了一个等待 kubeadm 
 
     To start using your cluster, you need to run the following as a regular user:
 
-      mkdir -p $HOME/.kube
-      sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-      sudo chown $(id -u):$(id -g) $HOME/.kube/config
+        mkdir -p $HOME/.kube
+        sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+        sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
     Alternatively, if you are the root user, you can run:
 
@@ -370,14 +364,15 @@ kubelet 现在每隔几秒就会重启，因为它陷入了一个等待 kubeadm 
     You can now join any number of control-plane nodes by copying certificate authorities
     and service account keys on each node and then running the following as root:
 
-      kubeadm join cluster-endpoint:6443 --token 93i63s.dwrhv1qqgbi0hdm3 \
-        --discovery-token-ca-cert-hash sha256:f1af1763e694511b765ffb23b28d0648315d1575e5c8f0f09d4e39b18dba3f0a \
+      kubeadm join cluster-endpoint:6443 --token oc8zg4.l5skfj2wp48dsdcc \
+        --discovery-token-ca-cert-hash sha256:a9207022cd416115a52220b3fc902789f7de6bee7d0e538337d0ae0e4144a7e7 \
         --control-plane
 
     Then you can join any number of worker nodes by running the following on each as root:
 
-    kubeadm join cluster-endpoint:6443 --token 93i63s.dwrhv1qqgbi0hdm3 \
-        --discovery-token-ca-cert-hash sha256:f1af1763e694511b765ffb23b28d0648315d1575e5c8f0f09d4e39b18dba3f0a
+    kubeadm join cluster-endpoint:6443 --token oc8zg4.l5skfj2wp48dsdcc \
+        --discovery-token-ca-cert-hash sha256:a9207022cd416115a52220b3fc902789f7de6bee7d0e538337d0ae0e4144a7e7
+
 .. code:: shell
 
    #查看集群所有节点
@@ -521,7 +516,8 @@ type: ClusterIP 改为 type: NodePort
 
     #获取访问令牌
     kubectl -n kubernetes-dashboard get secret $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath="{.secrets[0].name}") -o go-template="{{.data.token | base64decode}}"
-    eyJhbGciOiJSUzI1NiIsImtpZCI6Im95T0J1SzQ0S0toOW1jV1BOVTNyeWZ0NkFzcFJtV2IxWGxWYzlLaFQ5VHMifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLXdudmdyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJiYmMzMjRmYS1kYmQ2LTQ0NmMtOWY1MS0wYjE1ZmU0ZTVjOTciLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.FtysxO6moptddrXaI_yD19ebCuMqBab8Y8Yfe8g2v9fojyL3-QGYNKKmSYocMq5yDz8Dg6v_-HnHzYCIB21Z8wI_Jz40Wc2x9a6xV2MCltzOfFbWsVU98cLMC7TfkHgxi0l_iioCeA__GDsp04U3BF8I5GwNE8ollFayR-_ojOnlDXJZUphzqkTggS-KO5qkoS6JXX6Zmm16yqVHc4TE4jiGNopWgoTPPbIBY7elelhndAYr5qyeAnWn9IoPWq0qq8iS2gHaHv9JD_pH1j0G92pYbjydvV7am35I_T4Nd606Sd6yNzyaUGIFJ7p_hzulQ28NO3rUznd7A5g0DUL5bQ
+    kubectl -n kubernetes-dashboard get secret default-token-bzcvn -o go-template="{{.data.token | base64decode}}"
+    eyJhbGciOiJSUzI1NiIsImtpZCI6IjB5S3IwYktUc0c0N29yWm0tNjVLSVBvc2IwbzZDRUNrNGdvM1R2V2lWQUkifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLWd4NTZqIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJkZjRmMmY0Yi02YjE5LTQ3MWEtODExMS02MGFiMDYxMDgxY2IiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.iOvcBZJU-6wXuqRcsg6rmJJYRBVPC8NnxHon-Sf1hd8zKgHSjTXg5JYxQAl6mOffzksTdrvZ4Mj-xxb6hhkZdPdCgXHI9hLac1J_V3SMSjiyqS0rIj_o4NgVG3Sjr5ABzrfk4rCfFNyPXhOOz71nDtAeKISM8LrieijZvojZp4sCU-a4F1YULpYKRAcfstcm-SnffIP_omuwD2VNveB2aSgqaSHWXa0PmIEf2N14B0JoqyyQyEmAHi4T2bGrdgzULdJ6zzfdlL6kxJ4szed9-TJ4AAObad9ZpZC6Zjq1d3Zj0FumloUj_qYEHDj7KyN-nFeIGjJuE9mZEiL2WzTGlw
 
 .. _5界面:
 
