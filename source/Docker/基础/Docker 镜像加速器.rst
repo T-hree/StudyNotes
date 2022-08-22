@@ -47,7 +47,7 @@ Settings，打开配置窗口后左侧导航菜单选择 Daemon。在 Registrymi
 一栏中填写加速器地址 https://docker.mirrors.ustc.edu.cn/ ，之后点击
 Apply 保存后 Docker 就会重启并应用配置的镜像地址了。
 
-.. figure:: https://raw.githubusercontent.com/T-hree/Blog_img/main/img/38507F68-E30F-4CCA-AE9D-9E9EEF60EC83.jpg?token=AQBJNL6DTJHGMQDULOPUUKTC42LAI
+.. figure:: https://raw.githubusercontent.com/T-hree/Blog_img/main/img/38507F68-E30F-4CCA-AE9D-9E9EEF60EC83.jpg
    :alt: 
 
 Mac OS X
@@ -58,11 +58,11 @@ Perferences...-> Daemon-> Registrymirrors。在列表中填写加速器地址
 https://reg-mirror.qiniu.com 。修改完成之后，点击 Apply&Restart
 按钮，Docker 就会重启并应用配置的镜像地址了。
 
-.. figure:: https://raw.githubusercontent.com/T-hree/Blog_img/main/img/D26C96AF-8EFF-46E5-8618-4C67E72ACBAF.jpg?token=AQBJNL5QY7IOEYCKZAG5CXDC42LAE
+.. figure:: https://raw.githubusercontent.com/T-hree/Blog_img/main/img/D26C96AF-8EFF-46E5-8618-4C67E72ACBAF.jpg
    :alt: 
 
 检查加速器是否生效
-------------------
+---------------------
 
 检查加速器是否生效配置加速器之后，如果拉取镜像仍然十分缓慢，请手动检查加速器配置是否生效，在命令行执行
 **docker info**\ ，如果从结果中看到了如下内容，说明配置成功。
@@ -76,7 +76,7 @@ https://reg-mirror.qiniu.com 。修改完成之后，点击 Apply&Restart
        https://reg-mirror.qiniu.com
 
 镜像加速器地址
-==============
+------------------
 
 .. code:: json
 

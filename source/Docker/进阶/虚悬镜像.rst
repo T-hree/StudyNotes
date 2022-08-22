@@ -22,6 +22,7 @@
 
 虚悬镜像已经失去存在价值， 可以删除：
 ::
+
     docker image prune
 
     xiaoyan@xiaoyan Desktop % docker image prune
