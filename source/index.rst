@@ -19,6 +19,7 @@ Welcome to StudyNotes's documentation!
    Docker/index
    Kubernetes/index
    算法/index
+   GitLab/index
 
 
 
